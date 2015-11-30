@@ -24,6 +24,8 @@ public class Main {
 			for(String word : lines) {
 				bloomFilter.add(word);
 			}
+			System.out.println("expected: true, result: " + bloomFilter.contains("abraded"));
+			System.out.println("expected: false, result: " + bloomFilter.contains("abradedd"));
 		}
 		
 	}

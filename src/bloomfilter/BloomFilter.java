@@ -7,48 +7,62 @@ import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 
 public class BloomFilter {
-	private HashFunction hashFunction;
-	
 	private final int expectedN;
 	private final double errorProbabilityP;
 	
 	private final int m;
 	//number of hash functions
-	private final int k;
+	private final double k;
 	
-	private final BitSet data;
+	private final BitSet bitSet;
+	private final int bitsPerElement = 4;
+	private final int sizeBitSet;
 	
-	public BloomFilter(int expectedN, double errorProbabilityP) {
-		this.hashFunction = Hashing.murmur3_32();
-		
+	private int salt = 0;
+	
+	public BloomFilter(int expectedN, double errorProbabilityP) {		
 		this.expectedN = expectedN;
 		this.errorProbabilityP = errorProbabilityP;
 
-		this.m = (int) (-(expectedN * Math.log(errorProbabilityP))/(Math.log(2) * Math.log(2)));
-		this.k = (int)Math.log(m/(double)expectedN);
+		this.m = (int) (-(this.expectedN * Math.log(this.errorProbabilityP))/(Math.log(2.0) * Math.log(2.0)));
+		//TODO k is to low!! inserted "* 100"
+		this.k = (m/(double)expectedN)*Math.log(2.0) * 100;
+		//TODO for testing: remove later
+		System.out.println("m: " + m + " k: " + k);
 		
-		this.data = new BitSet(m);
+		this.sizeBitSet = m * bitsPerElement;
+		this.bitSet = new BitSet(sizeBitSet);
 	}
 	
 	public void add(String s) {
 		for (int i = 0; i < k; i++) {
-			int hashCode = getHashCode(s, i);
-			data.set(hashCode);
+			int hashCode = getHashCode(s);
+			bitSet.set(Math.abs(hashCode % sizeBitSet));
 		}
 	}
 	
 	public boolean contains(String s) {
 	    for (int i = 0; i < k; i++) {
-	    	int hashCode = getHashCode(s, i);
-		    if (!data.get(hashCode)) {
+	    	int hashCode = getHashCode(s);
+		    if (!bitSet.get(Math.abs(hashCode % sizeBitSet))) {
 		    	return false;
 		    }
 		}
 		return true;
 	}
 	
-	private int getHashCode(String s, int pos) {
-		return this.hashFunction.newHasher().putString(s, Charsets.UTF_8).putInt(pos).hashCode();
+	private HashFunction getHashWithSalt() {
+		return Hashing.murmur3_32(salt++);
+	}
+	
+	private int getHashCode(String s) {
+		HashFunction hashFunction = getHashWithSalt();
+		int hashed = hashFunction.newHasher()
+									.putString(s, Charsets.UTF_8)
+									.hash()
+									.asInt();
+		
+        return hashed;
 	}
 	
 }
