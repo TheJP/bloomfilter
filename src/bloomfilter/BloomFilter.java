@@ -15,7 +15,7 @@ public class BloomFilter {
 	private final double k;
 	
 	private final BitSet bitSet;
-	private final int bitsPerElement = 32;
+	private final int bitsPerElement = 4;
 	private final int sizeBitSet;
 	
 	private int salt = 0;
@@ -52,7 +52,7 @@ public class BloomFilter {
 	}
 	
 	private HashFunction getHashWithSalt() {
-		return Hashing.murmur3_32(salt++);
+		return Hashing.murmur3_32(salt);
 	}
 	
 	private int getHashCode(String s) {
