@@ -14,21 +14,21 @@ public class Main {
 	private static final double errorProbabilityP = 0.1;
 	
 	public static void main(String[] args) throws IOException {
-		List<String> words = Files.readLines(fileWords, Charsets.UTF_8);
-		List<String> wrongWords = Files.readLines(fileWrongWords, Charsets.UTF_8);
-
-		System.out.println("InsertLines: " + words.size());
-		System.out.println("TestLines: " + wrongWords.size());
 		System.out.println("ErrorProbability p: " + errorProbabilityP);
+		
+		List<String> words = readFile(fileWords);
+		System.out.println("Insert line count: " + words.size());
 		
 		BloomFilter bloomFilter = new BloomFilter(words.size(), errorProbabilityP);
 		bloomFilter.addAll(words);
 		
-        System.out.println("#" + fileWords.getName());
-        wordsInFilter(words, bloomFilter);
-        
-        System.out.println("#" + fileWrongWords.getName());
-        wordsInFilter(wrongWords, bloomFilter);
+        wordsInFilter(readFile(fileWords), bloomFilter);
+        wordsInFilter(readFile(fileWrongWords), bloomFilter);
+	}
+	
+	public static List<String> readFile(File file) throws IOException {
+        System.out.println("#" + file.getName());
+		return Files.readLines(file, Charsets.UTF_8);
 	}
 	
 	/**
@@ -46,7 +46,7 @@ public class Main {
 			}
 		}
 		double percent =  100/(double)words.size() * correctWordsFound;
-		System.out.println("- found: " + correctWordsFound);
+		System.out.println("- found: " + correctWordsFound + " from: " + words.size());
 		System.out.println(String.format("- percent: %.2f%%", percent));
 	}
 	
