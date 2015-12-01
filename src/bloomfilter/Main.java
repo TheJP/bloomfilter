@@ -20,12 +20,13 @@ public class Main {
 		System.out.println("InsertLines: " + words.size());
 		System.out.println("TestLines: " + wrongWords.size());
 		System.out.println("ErrorProbability p: " + errorProbabilityP);
+		
 		BloomFilter bloomFilter = new BloomFilter(words.size(), errorProbabilityP);
-		for(String word : words) {
-			bloomFilter.add(word);
-		}
+		bloomFilter.addAll(words);
+		
         System.out.println("#" + fileWords.getName());
         wordsInFilter(words, bloomFilter);
+        
         System.out.println("#" + fileWrongWords.getName());
         wordsInFilter(wrongWords, bloomFilter);
 	}

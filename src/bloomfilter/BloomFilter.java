@@ -1,7 +1,7 @@
 package bloomfilter;
 
-import java.security.SecureRandom;
 import java.util.BitSet;
+import java.util.List;
 
 import com.google.common.base.Charsets;
 import com.google.common.hash.HashFunction;
@@ -50,6 +50,16 @@ public class BloomFilter {
 		for (int i = 0; i < hashFunctions.length; i++) {
 			int hashCode = getHashCode(string, hashFunctions[i]);
 			bitSet.set(Math.abs(hashCode % sizeBitSet));
+		}
+	}
+	
+	/**
+	 * Add a list of words to the filter.
+	 * @param words elements witch sould be added.O
+	 */
+	public void addAll(List<String> words) {
+		for(String word: words){
+			this.add(word);
 		}
 	}
 	
