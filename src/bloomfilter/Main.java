@@ -50,8 +50,8 @@ public class Main {
 			}
 		}
 		double percent =  100/(double)words.size() * correctWordsFound;
-		System.out.println("found: " + correctWordsFound);
-		System.out.println(String.format("in percent: %.2f%%", percent));
+		System.out.println("- found: " + correctWordsFound);
+		System.out.println(String.format("- percent: %.2f%%", percent));
 	}
 	
 }
