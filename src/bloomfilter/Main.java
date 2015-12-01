@@ -10,6 +10,8 @@ import com.google.common.io.Files;
 public class Main {
 	private static final File file = new File("resources/words.txt");
 	private static final File fileWrong = new File("resources/wordsFalsCases.txt");
+	private static final double errorProbabilityP = 0.1;
+	
 	
 	public static void main(String[] args) {
 		List<String> lines = null;
@@ -22,28 +24,31 @@ public class Main {
 			e.printStackTrace();
 		}
 		
-		if(lines != null) {
-			BloomFilter bloomFilter = new BloomFilter(lines.size(), 0.1);
+		if(lines != null && wrongLines != null) {
+			System.out.println("InsertLines: " + lines.size());
+			System.out.println("TestLines: " + lines.size());
+			BloomFilter bloomFilter = new BloomFilter(lines.size(), errorProbabilityP);
 			for(String word : lines) {
 				bloomFilter.add(word);
 			}
-			System.out.println("expected: true, result: " + bloomFilter.contains("abraded"));
-			System.out.println("expected: false, result: " + bloomFilter.contains("abradedd"));
-		
-			int wrongMarkedCorrect = 0;
-			
-			for(String s : wrongLines) {
-				if(bloomFilter.contains(s)) {
-					wrongMarkedCorrect++;
-//					System.out.println(s);
-				}
-			}
-			double percent =  100/(double)wrongLines.size() * wrongMarkedCorrect;
-			System.out.println("as correct marked wrongs: " + wrongMarkedCorrect);
-			System.out.println("tested: " + wrongLines.size());
-			System.out.println("in percent: " + percent);
+//			System.out.println("expected: true, result: " + bloomFilter.contains("abraded"));
+//			System.out.println("expected: false, result: " + bloomFilter.contains("abradedd"));
+			wordsInFilter(lines, bloomFilter);
+			wordsInFilter(wrongLines, bloomFilter);
 		}
+	}
+	
+	public static void wordsInFilter(List<String> words, BloomFilter bloomFilter) {
+		int correctWordsFound = 0;
 		
+		for(String s : words) {
+			if(bloomFilter.contains(s)) {
+				correctWordsFound++;
+			}
+		}
+		double percent =  100/(double)words.size() * correctWordsFound;
+		System.out.println("found: " + correctWordsFound);
+		System.out.println("in percent: " + percent);
 	}
 	
 }

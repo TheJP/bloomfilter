@@ -29,12 +29,9 @@ public class BloomFilter {
 		for(int i = 0; i < k; i++) {
 			hashFunctions[i] = Hashing.murmur3_32(i);
 		}
-		
-		//TODO for testing: remove later
-		System.out.println("m: " + m + " k: " + k);
-		
 		this.sizeBitSet = m * bitsPerElement;
 		this.bitSet = new BitSet(sizeBitSet);
+		System.out.println("m: " + m + " k: " + k);
 	}
 	
 	public void add(String s) {
