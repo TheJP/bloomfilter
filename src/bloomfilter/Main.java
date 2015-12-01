@@ -34,8 +34,10 @@ public class Main {
 			}
 //			System.out.println("expected: true, result: " + bloomFilter.contains("abraded"));
 //			System.out.println("expected: false, result: " + bloomFilter.contains("abradedd"));
-			wordsInFilter(lines, bloomFilter);
-			wordsInFilter(wrongLines, bloomFilter);
+            System.out.println("#words.txt");
+            wordsInFilter(lines, bloomFilter);
+            System.out.println("#wordsFalseCases.txt");
+            wordsInFilter(wrongLines, bloomFilter);
 		}
 	}
 	
@@ -49,7 +51,7 @@ public class Main {
 		}
 		double percent =  100/(double)words.size() * correctWordsFound;
 		System.out.println("found: " + correctWordsFound);
-		System.out.println("in percent: " + percent);
+		System.out.println(String.format("in percent: %.2f%%", percent));
 	}
 	
 }
