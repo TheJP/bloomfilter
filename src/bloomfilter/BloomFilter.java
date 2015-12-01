@@ -25,8 +25,8 @@ public class BloomFilter {
 		this.errorProbabilityP = errorProbabilityP;
 
 		this.m = (int) (-(this.expectedN * Math.log(this.errorProbabilityP))/(Math.log(2.0) * Math.log(2.0)));
-		//TODO k is to low!! inserted "* 100"
-		this.k = (m/(double)expectedN)*Math.log(2.0) * 100;
+		this.k = (m/(double)expectedN)*Math.log(2.0);
+		
 		//TODO for testing: remove later
 		System.out.println("m: " + m + " k: " + k);
 		

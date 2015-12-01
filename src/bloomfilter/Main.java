@@ -20,7 +20,7 @@ public class Main {
 		}
 		
 		if(lines != null) {
-			BloomFilter bloomFilter = new BloomFilter(lines.size(), 0.9);
+			BloomFilter bloomFilter = new BloomFilter(lines.size(), 0.1);
 			for(String word : lines) {
 				bloomFilter.add(word);
 			}
