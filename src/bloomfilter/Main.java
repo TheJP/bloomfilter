@@ -26,6 +26,12 @@ public class Main {
         wordsInFilter(readFile(fileWrongWords), bloomFilter);
 	}
 	
+	/**
+	 * Read file to List of words.
+	 * @param file element to load from.
+	 * @return List of words
+	 * @throws IOException if content could not be accessed.
+	 */
 	public static List<String> readFile(File file) throws IOException {
         System.out.println("#" + file.getName());
 		return Files.readLines(file, Charsets.UTF_8);
