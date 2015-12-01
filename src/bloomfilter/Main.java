@@ -10,6 +10,7 @@ import com.google.common.io.Files;
 public class Main {
 	private static final File file = new File("resources/words.txt");
 	private static final File fileWrong = new File("resources/wordsFalseCases.txt");
+	
 	private static final double errorProbabilityP = 0.1;
 	
 	public static void main(String[] args) {
