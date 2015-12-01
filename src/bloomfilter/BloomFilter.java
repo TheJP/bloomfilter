@@ -12,20 +12,23 @@ public class BloomFilter {
 	
 	private final int m;
 	//number of hash functions
-	private final double k;
+	private final int k;
+	private final HashFunction[] hashFunctions;
 	
 	private final BitSet bitSet;
-	private final int bitsPerElement = 4;
+	private final int bitsPerElement = 1;
 	private final int sizeBitSet;
-	
-	private int salt = 0;
 	
 	public BloomFilter(int expectedN, double errorProbabilityP) {		
 		this.expectedN = expectedN;
 		this.errorProbabilityP = errorProbabilityP;
 
 		this.m = (int) (-(this.expectedN * Math.log(this.errorProbabilityP))/(Math.log(2.0) * Math.log(2.0)));
-		this.k = (m/(double)expectedN)*Math.log(2.0);
+		this.k = (int)Math.ceil((m/(double)expectedN)*Math.log(2.0));
+		hashFunctions = new HashFunction[k];
+		for(int i = 0; i < k; i++) {
+			hashFunctions[i] = Hashing.murmur3_32(i);
+		}
 		
 		//TODO for testing: remove later
 		System.out.println("m: " + m + " k: " + k);
@@ -35,15 +38,15 @@ public class BloomFilter {
 	}
 	
 	public void add(String s) {
-		for (int i = 0; i < k; i++) {
-			int hashCode = getHashCode(s);
+		for (int i = 0; i < hashFunctions.length; i++) {
+			int hashCode = getHashCode(s, hashFunctions[i]);
 			bitSet.set(Math.abs(hashCode % sizeBitSet));
 		}
 	}
 	
 	public boolean contains(String s) {
-	    for (int i = 0; i < k; i++) {
-	    	int hashCode = getHashCode(s);
+	    for (int i = 0; i < hashFunctions.length; i++) {
+	    	int hashCode = getHashCode(s, hashFunctions[i]);
 		    if (!bitSet.get(Math.abs(hashCode % sizeBitSet))) {
 		    	return false;
 		    }
@@ -51,12 +54,7 @@ public class BloomFilter {
 		return true;
 	}
 	
-	private HashFunction getHashWithSalt() {
-		return Hashing.murmur3_32(salt);
-	}
-	
-	private int getHashCode(String s) {
-		HashFunction hashFunction = getHashWithSalt();
+	private int getHashCode(String s, HashFunction hashFunction) {
 		return hashFunction.newHasher()
 							.putString(s, Charsets.UTF_8)
 							.hash()
