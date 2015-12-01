@@ -9,9 +9,8 @@ import com.google.common.io.Files;
 
 public class Main {
 	private static final File file = new File("resources/words.txt");
-	private static final File fileWrong = new File("resources/wordsFalsCases.txt");
+	private static final File fileWrong = new File("resources/wordsFalseCases.txt");
 	private static final double errorProbabilityP = 0.1;
-	
 	
 	public static void main(String[] args) {
 		List<String> lines = null;
@@ -27,6 +26,7 @@ public class Main {
 		if(lines != null && wrongLines != null) {
 			System.out.println("InsertLines: " + lines.size());
 			System.out.println("TestLines: " + lines.size());
+			System.out.println("ErrorProbability p: " + errorProbabilityP);
 			BloomFilter bloomFilter = new BloomFilter(lines.size(), errorProbabilityP);
 			for(String word : lines) {
 				bloomFilter.add(word);
