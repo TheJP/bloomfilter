@@ -19,8 +19,6 @@ public class BloomFilter {
 	private final HashFunction[] hashFunctions;
 	
 	private final BitSet bitSet;
-	private final int bitsPerElement = 1;
-	private final int sizeBitSet;
 	
 	/**
 	 * Create BloomFilter.
@@ -37,8 +35,7 @@ public class BloomFilter {
 		for(int i = 0; i < k; i++) {
 			hashFunctions[i] = Hashing.murmur3_32((int)(Math.random() * 10000));
 		}
-		this.sizeBitSet = m * bitsPerElement;
-		this.bitSet = new BitSet(sizeBitSet);
+		this.bitSet = new BitSet(m);
 		System.out.println("m: " + m + " k: " + k);
 	}
 	
@@ -49,7 +46,7 @@ public class BloomFilter {
 	public void add(String string) {
 		for (int i = 0; i < hashFunctions.length; i++) {
 			int hashCode = getHashCode(string, hashFunctions[i]);
-			bitSet.set(Math.abs(hashCode % sizeBitSet));
+			bitSet.set(Math.abs(hashCode % m));
 		}
 	}
 	
@@ -71,7 +68,7 @@ public class BloomFilter {
 	public boolean contains(String string) {
 	    for (int i = 0; i < hashFunctions.length; i++) {
 	    	int hashCode = getHashCode(string, hashFunctions[i]);
-		    if (!bitSet.get(Math.abs(hashCode % sizeBitSet))) {
+		    if (!bitSet.get(Math.abs(hashCode % m))) {
 		    	return false;
 		    }
 		}
